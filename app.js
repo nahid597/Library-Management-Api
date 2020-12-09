@@ -1,15 +1,15 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const mongoose = require("mongoose");
-var cors = require("cors");
+const cors = require("cors");
 const config = require("config");
+const bodyParser = require('body-parser');
 
 const indexRouter = require("./routes/index");
-const studenRouter = require("./routes/student");
-const librarianRouter = require("./routes/librarian");
+const bookRouter = require("./routes/books");
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
 
@@ -28,7 +28,7 @@ mongoose
   .then(() => console.log("mongode connected successfully"))
   .catch((error) => console.log(error));
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -37,13 +37,15 @@ app.set("view engine", "jade");
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use('/uploads',express.static('uploads'));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use("/", indexRouter);
-app.use("/api/student", studenRouter);
-app.use("/api/librarian", librarianRouter);
+app.use("/api/book", bookRouter);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 
