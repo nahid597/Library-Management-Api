@@ -19,7 +19,7 @@ if (!config.get("jwtprivatekey")) {
 }
 
 mongoose
-  .connect("mongodb://localhost/library", {
+  .connect("mongodb+srv://nahid597:VoGU2cPQOPRCbO3g@cluster0.ekeoc.mongodb.net/library?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -33,6 +33,8 @@ const app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
+
+require('./middleware/prod')(app);
 
 app.use(cors());
 app.use(logger("dev"));
